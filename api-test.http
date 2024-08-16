@@ -1,0 +1,126 @@
+# Gym Management API Tests
+# Version: 1.2
+# Last Updated: 2024-08-07
+# Description: This file contains HTTP requests for testing the Gym Management API.
+# Usage: Replace placeholder values in .env file before running tests.
+
+### Variables
+@baseUrl = http://localhost:3002/api
+@memberId = 586394fa-6925-4414-bf51-aa0cdb7f75bc
+@amount = 1000
+
+### Check-In Operations
+
+### Create a new check-in
+# Expected: 201 Created
+POST {{baseUrl}}/check-in
+Content-Type: application/json
+
+{
+  "memberId": "{{memberId}}"
+}
+
+### Get historical check-ins for member
+# Expected: 200 OK
+GET {{baseUrl}}/check-in?memberId={{memberId}}
+
+### Get all historical check-ins
+# Expected: 200 OK
+GET {{baseUrl}}/check-in
+
+### Membership Plan Operations
+
+@membershipPlanId = 56037890-81a1-4f51-9a0c-c342a3e72103
+
+### Create a new membership plan
+# Expected: 201 Created
+POST {{baseUrl}}/membership-plans
+Content-Type: application/json
+
+{
+  "name": "Monthly Premium Plan",
+  "duration": 1,
+  "price": 49.99
+}
+
+
+### Get all membership plans
+# Expected: 200 OK
+GET {{baseUrl}}/membership-plans
+
+### Get a specific membership plan
+# Expected: 200 OK
+GET {{baseUrl}}/membership-plans/{{membershipPlanId}}
+
+### Update a membership plan
+# Expected: 200 OK
+PATCH {{baseUrl}}/membership-plans/{{membershipPlanId}}
+Content-Type: application/json
+
+{
+  "name": "Updated Monthly Plan",
+  "price": 54.99
+}
+
+### Delete a membership plan
+# Expected: 204 No Content
+DELETE {{baseUrl}}/membership-plans/{{membershipPlanId}}
+
+### Payment Operations
+
+### Initiate a payment
+# Expected: 200 OK
+POST {{baseUrl}}/payments/initiate
+Content-Type: application/json
+
+{
+  "memberId": "{{memberId}}",
+  "amount": {{amount}}
+}
+
+### Confirm a payment
+@paymentIntentId = test
+# Expected: 200 OK
+POST {{baseUrl}}/payments/confirm/{{paymentIntentId}}
+Content-Type: application/json
+
+### Get payment history for a member
+# Expected: 200 OK
+GET {{baseUrl}}/payments/history/{{memberId}}
+
+### Member Operations
+
+### Get members
+# Expected: 200 OK
+GET {{baseUrl}}/members
+Accept: application/json
+
+### Register member
+# Expected: 201 Created
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+  "firstName": "Hanif",
+  "lastName": "Carroll",
+  "email": "HanifCarroll@gmail.com",
+  "phone": "941-286-5903",
+  "status": "Active"
+}
+
+### Error Handling Examples
+
+### Get non-existent membership plan
+# Expected: 404 Not Found
+GET {{baseUrl}}/membership-plans/non-existent-id
+
+### Create member with invalid data
+# Expected: 400 Bad Request
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+  "firstName": "Invalid",
+  "lastName": "User",
+  "email": "not-an-email"
+}
