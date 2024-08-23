@@ -2,6 +2,7 @@
   "name": "gym-managememt-server-express",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon",
     "build": "tsc && tsc-alias",
