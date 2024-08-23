@@ -2,7 +2,7 @@
 
 A scalable and robust backend for efficient gym management. This backend project provides the core API and services for
 managing members, memberships, payments, and check-ins, integrating seamlessly with
-the [frontend application](https://github.com/HanifCarroll/gym-management-client).
+the [frontend application](https://github.com/HanifCarroll/gym-management-client-react).
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@ the [frontend application](https://github.com/HanifCarroll/gym-management-client
 ## Technologies Used
 
 - Node.js: JavaScript runtime for building the server-side application
-- Nest.js: A progressive Node.js framework for building efficient, scalable applications
+- Express.js: A proven library for building efficient, scalable applications
 - TypeScript: Strongly typed programming language that builds on JavaScript
 - Supabase: Hosted Postgres database for data storage
 - Stripe: Payment processing integration for handling transactions
@@ -45,20 +45,12 @@ into several key modules:
 
 Core Modules:
 
-- Members Module: Handles all operations related to gym members
+- Member Module: Handles all operations related to gym members
 - Membership Plans Module: Manages membership plans
-- Payments Module: Integrates with Stripe to manage payments
+- Payment Module: Integrates with Stripe to manage payments
 - Check-In Module: Records and manages member check-ins
-
-Services and Repositories:
-
-- Service Layer: Contains business logic for each module
-- Repository Layer: Handles data access and manipulation
-
-Utility Layer:
-
-- Supabase Service: Provides a wrapper around Supabase
-- Stripe Service: Encapsulates Stripe API calls
+- Stripe Module: Encapsulates Stripe API calls
+- Supabase Module: Provides a wrapper around Supabase
 
 This architecture promotes:
 
@@ -78,13 +70,13 @@ This architecture promotes:
 1. Clone the repository:
 
    ```
-   git clone https://github.com/HanifCarroll/gym-management-server.git
+   git clone https://github.com/HanifCarroll/gym-management-server-express.git
    ```
 
 2. Navigate to the project directory:
 
    ```
-   cd gym-management-server
+   cd gym-management-server-express
    ```
 
 3. Install dependencies:
@@ -155,22 +147,22 @@ The database schema is implemented in Supabase and follows a relational model. K
 The backend exposes a RESTful API for interacting with the system. Key endpoints include:
 
 - Members:
-  - GET /api/members
-  - POST /api/members
-  - PUT /api/members/:id
-  - DELETE /api/members/:id
+    - GET /api/members
+    - POST /api/members
+    - PUT /api/members/:id
+    - DELETE /api/members/:id
 - Membership Plans:
-  - GET /api/membership-plans
-  - POST /api/membership-plans
-  - PATCH /api/membership-plans/:id
-  - DELETE /api/membership-plans/:id
+    - GET /api/membership-plans
+    - POST /api/membership-plans
+    - PATCH /api/membership-plans/:id
+    - DELETE /api/membership-plans/:id
 - Payments:
-  - POST /api/payments/initiate
-  - POST /api/payments/confirm/:paymentIntentId
-  - GET /api/payments/history
+    - POST /api/payments/initiate
+    - POST /api/payments/confirm/:paymentIntentId
+    - GET /api/payments/history
 - Check-Ins:
-  - POST /api/check-in
-  - GET /api/check-in/history
+    - POST /api/check-in
+    - GET /api/check-in/history
 
 These endpoints are documented using Swagger, which is automatically generated and can be accessed
 at `http://localhost:3001/api`.
@@ -181,26 +173,26 @@ To ensure code quality and consistency, this project uses:
 
 - **Prettier**: For consistent code formatting
 
-  - Configuration in `.prettierrc`
-  - Run formatter: `npm run format`
+    - Configuration in `.prettierrc`
+    - Run formatter: `npm run format`
 
 - **ESLint**: For static code analysis
 
-  - Configuration in `.eslintrc.js`
-  - Run linter: `npm run lint`
+    - Configuration in `.eslintrc.js`
+    - Run linter: `npm run lint`
 
 - **lint-staged**: For running linters on git staged files
 
-  - Configuration in `package.json`
+    - Configuration in `package.json`
 
 - **Husky**: For running git hooks
-  - Pre-commit hook to run lint-staged
+    - Pre-commit hook to run lint-staged
 
 These tools ensure that the codebase remains clean, readable, and maintainable.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
 
 ## Contact Information
 
