@@ -32,7 +32,7 @@ import { StripeService } from '@/stripe';
 const express = require('express');
 
 const app = express();
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3001;
 
 // Set up middleware
 app.use(bodyParser.json()); // Parses incoming requests with JSON payloads
