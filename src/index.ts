@@ -1,3 +1,4 @@
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { NextFunction, Request, Response } from 'express';
@@ -27,9 +28,6 @@ import {
 } from '@/payment';
 import { SupabaseService } from '@/supabase';
 import { StripeService } from '@/stripe';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const express = require('express');
 
 const app = express();
 const port = process.env.PORT || 3001;

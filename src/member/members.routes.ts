@@ -28,7 +28,6 @@ export const createMembersRouter = ({
   router.get('/', async (req, res) => {
     const result = await membersController.findAll();
     res.json(result);
-    // res.status(500).json({ error: 'Internal Server Error' });
   });
 
   router.patch<{ id: string }, unknown, UpdateMemberDto>(
