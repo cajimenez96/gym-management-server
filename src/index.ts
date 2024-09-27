@@ -30,7 +30,7 @@ import { SupabaseService } from '@/supabase';
 import { StripeService } from '@/stripe';
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 4000;
 
 // Set up middleware
 app.use(bodyParser.json()); // Parses incoming requests with JSON payloads
