@@ -1,8 +1,8 @@
 # Use the official Node.js 20 image as a parent image
 FROM oven/bun:latest
 
-# Copy package.json and bun.lockb (if you have one)
-COPY package.json bun.lockb* ./
+# Set the working directory in the container
+WORKDIR /app
 
 # Copy package.json and bun.lockb (if you have one)
 COPY package.json bun.lockb* ./
@@ -12,9 +12,6 @@ RUN bun install
 
 # Copy the rest of your application's code
 COPY . .
-
-# Build your app
-RUN npm run build
 
 # Expose the port your app runs on
 EXPOSE 4000
