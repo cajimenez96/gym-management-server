@@ -1,8 +1,3 @@
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
-
 export const config = {
   supabase: {
     url: process.env.SUPABASE_URL,
