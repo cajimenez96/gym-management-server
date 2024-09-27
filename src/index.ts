@@ -35,7 +35,11 @@ const port = process.env.PORT || 3001;
 // Set up middleware
 app.use(bodyParser.json()); // Parses incoming requests with JSON payloads
 app.use(bodyParser.urlencoded({ extended: true })); // Parses incoming requests with URL-encoded payloads
-app.use(cors()); // Enables Cross-Origin Resource Sharing (CORS)
+app.use(
+  cors({
+    origin: 'https://hc-gym-management.netlify.app',
+  }),
+);
 
 // Set up dependencies
 const supabaseService = new SupabaseService();
