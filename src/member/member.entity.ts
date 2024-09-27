@@ -1,34 +1,34 @@
 export enum MemberStatus {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Suspended = 'Suspended',
+	Active = 'Active',
+	Inactive = 'Inactive',
+	Suspended = 'Suspended',
 }
 
 export interface DbMember {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  status: MemberStatus;
-  created_at: string;
-  updated_at: string;
+	id: string;
+	first_name: string;
+	last_name: string;
+	email: string;
+	phone?: string;
+	status: MemberStatus;
+	created_at: string;
+	updated_at: string;
 }
 
 export interface Member {
-  id: string;
+	id: string;
 
-  firstName: string;
+	firstName: string;
 
-  lastName: string;
+	lastName: string;
 
-  email: string;
+	email: string;
 
-  phone?: string;
+	phone?: string;
 
-  status: MemberStatus;
+	status: MemberStatus;
 
-  createdAt: string;
+	createdAt: string;
 
-  updatedAt: string;
+	updatedAt: string;
 }

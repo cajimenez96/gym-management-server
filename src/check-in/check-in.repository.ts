@@ -1,33 +1,33 @@
-import { SupabaseService } from '@/supabase';
+import type { CheckIn } from '@/check-in';
+import type { SupabaseService } from '@/supabase';
 import { transformSupabaseResultToCamelCase } from '@/utils';
-import { CheckIn } from '@/check-in';
 
 export class CheckInRepository {
-  private readonly tableName = 'check_in';
+	private readonly tableName = 'check_in';
 
-  constructor(private supabaseService: SupabaseService) {}
+	constructor(private supabaseService: SupabaseService) {}
 
-  private get db() {
-    return this.supabaseService.getClient().from(this.tableName);
-  }
+	private get db() {
+		return this.supabaseService.getClient().from(this.tableName);
+	}
 
-  async create(memberId: string): Promise<CheckIn> {
-    const { data, error } = await this.db
-      .insert({ member_id: memberId })
-      .select()
-      .single();
+	async create(memberId: string): Promise<CheckIn> {
+		const { data, error } = await this.db
+			.insert({ member_id: memberId })
+			.select()
+			.single();
 
-    if (error) {
-      throw new Error(`Failed to create check-in: ${error.message}`);
-    }
+		if (error) {
+			throw new Error(`Failed to create check-in: ${error.message}`);
+		}
 
-    return transformSupabaseResultToCamelCase<CheckIn>(data);
-  }
+		return transformSupabaseResultToCamelCase<CheckIn>(data);
+	}
 
-  async getHistory(memberId?: string): Promise<CheckIn[]> {
-    let query = this.db
-      .select(
-        `
+	async getHistory(memberId?: string): Promise<CheckIn[]> {
+		let query = this.db
+			.select(
+				`
         *,
         member:member_id (
           id,
@@ -36,21 +36,21 @@ export class CheckInRepository {
           email
         )
       `,
-      )
-      .order('date_time', { ascending: false });
+			)
+			.order('date_time', { ascending: false });
 
-    if (memberId) {
-      query = query.eq('member_id', memberId);
-    }
+		if (memberId) {
+			query = query.eq('member_id', memberId);
+		}
 
-    const { data, error } = await query;
+		const { data, error } = await query;
 
-    if (error) {
-      throw new Error(
-        `Failed to retrieve historical check-ins: ${error.message}`,
-      );
-    }
+		if (error) {
+			throw new Error(
+				`Failed to retrieve historical check-ins: ${error.message}`,
+			);
+		}
 
-    return transformSupabaseResultToCamelCase<CheckIn[]>(data);
-  }
+		return transformSupabaseResultToCamelCase<CheckIn[]>(data);
+	}
 }

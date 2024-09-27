@@ -1,15 +1,15 @@
 export interface InitiatePaymentDto {
-  memberId: string;
+	memberId: string;
 
-  amount: number;
+	amount: number;
 
-  planId: string;
+	planId: string;
 }
 
 export interface CreatePaymentResponse {
-  paymentId: string;
+	paymentId: string;
 
-  clientSecret: string;
+	clientSecret: string;
 
-  paymentIntentId: string;
+	paymentIntentId: string;
 }

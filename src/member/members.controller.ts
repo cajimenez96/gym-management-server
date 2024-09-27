@@ -3,7 +3,7 @@ import type {
 	Member,
 	MemberService,
 	UpdateMemberDto,
-} from "@/member";
+} from '@/member';
 
 export class MembersController {
 	constructor(private readonly memberService: MemberService) {}

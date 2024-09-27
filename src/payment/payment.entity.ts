@@ -1,33 +1,33 @@
 export enum PaymentStatus {
-  SUCCESSFUL = 'Successful',
-  FAILED = 'Failed',
-  PENDING = 'Pending',
+	SUCCESSFUL = 'Successful',
+	FAILED = 'Failed',
+	PENDING = 'Pending',
 }
 
 export interface DbPayment {
-  id: string;
-  member_id: string;
-  amount: number;
-  date: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
+	id: string;
+	member_id: string;
+	amount: number;
+	date: string;
+	status: string;
+	created_at: string;
+	updated_at: string;
 }
 
 export interface Payment {
-  id: string;
+	id: string;
 
-  memberId: string; // Foreign key to Member
+	memberId: string; // Foreign key to Member
 
-  planId: string; // Foreign key to MembershipPlan
+	planId: string; // Foreign key to MembershipPlan
 
-  amount: number; // Decimal
+	amount: number; // Decimal
 
-  date: string; // DateTime
+	date: string; // DateTime
 
-  status: PaymentStatus;
+	status: PaymentStatus;
 
-  createdAt: string;
+	createdAt: string;
 
-  updatedAt: string;
+	updatedAt: string;
 }

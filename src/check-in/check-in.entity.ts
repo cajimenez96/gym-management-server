@@ -1,19 +1,19 @@
 export interface DbCheckIn {
-  id: string;
+	id: string;
 
-  member_id: string;
+	member_id: string;
 
-  date_time: string;
+	date_time: string;
 
-  created_at: string;
+	created_at: string;
 }
 
 export interface CheckIn {
-  id: string;
+	id: string;
 
-  memberId: string; // Foreign key to Member
+	memberId: string; // Foreign key to Member
 
-  dateTime: string; // DateTime
+	dateTime: string; // DateTime
 
-  createdAt: string;
+	createdAt: string;
 }
