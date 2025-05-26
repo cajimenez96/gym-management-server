@@ -1,207 +1,195 @@
-# Gym Management Application Backend
+# Aplicación de Gestión de Gimnasio Backend
 
-A scalable and robust backend for efficient gym management. This backend project provides the core API and services for
-managing members, memberships, payments, and check-ins, integrating seamlessly with
-the [frontend application](https://github.com/HanifCarroll/gym-management-client-react).
+Un backend escalable y robusto para la gestión eficiente de gimnasios. Este proyecto backend proporciona la API principal y los servicios para
+gestionar miembros, membresías, pagos y registros de entrada, integrándose perfectamente con
+la [aplicación frontend](https://github.com/HanifCarroll/gym-management-client-react).
 
-## Table of Contents
+## Tabla de Contenidos
 
-1. [Features](#features)
-2. [Technologies Used](#technologies-used)
-3. [Architecture Overview](#architecture-overview)
-4. [Getting Started](#getting-started)
-5. [Running the Application](#running-the-application)
-6. [Testing](#testing)
-7. [Database Schema](#database-schema)
-8. [API Endpoints](#api-endpoints)
-9. [Code Quality and Formatting](#code-quality-and-formatting)
-10. [License](#license)
-11. [Contact Information](#contact-information)
+1. [Características](#características)
+2. [Tecnologías Utilizadas](#tecnologías-utilizadas)
+3. [Visión General de la Arquitectura](#visión-general-de-la-arquitectura)
+4. [Comenzando](#comenzando)
+5. [Ejecutando la Aplicación](#ejecutando-la-aplicación)
+6. [Pruebas](#pruebas)
+7. [Esquema de Base de Datos](#esquema-de-base-de-datos)
+8. [Endpoints de la API](#endpoints-de-la-api)
+9. [Calidad y Formato del Código](#calidad-y-formato-del-código)
+10. [Licencia](#licencia)
 
-## Features
+## Características
 
-- Member management with CRUD operations
-- Membership plan creation and management
-- Payment processing with Stripe integration
-- Member check-in system
-- Well-documented RESTful API
+- Gestión de miembros con operaciones CRUD
+- Creación y gestión de planes de membresía
+- Procesamiento de pagos con integración de Stripe
+- Sistema de registro de entrada de miembros
+- API RESTful bien documentada
 
-## Technologies Used
+## Tecnologías Utilizadas
 
-- Node.js: JavaScript runtime for building the server-side application
-- Express.js: A proven library for building efficient, scalable applications
-- TypeScript: Strongly typed programming language that builds on JavaScript
-- Supabase: Hosted Postgres database for data storage
-- Stripe: Payment processing integration for handling transactions
-- Jest: Testing framework for unit and integration tests
-- ESLint: Linting tool to ensure code quality
-- Prettier: Code formatter for consistent styling
-- Docker: Containerization for consistent environment setup
+- Node.js: Runtime de JavaScript para construir la aplicación del lado del servidor
+- Express.js: Una biblioteca probada para construir aplicaciones eficientes y escalables
+- TypeScript: Lenguaje de programación fuertemente tipado que se basa en JavaScript
+- Supabase: Base de datos Postgres hospedada para almacenamiento de datos
+- Stripe: Integración de procesamiento de pagos para manejar transacciones
+- Jest: Framework de pruebas para pruebas unitarias y de integración
+- ESLint: Herramienta de linting para asegurar la calidad del código
+- Prettier: Formateador de código para un estilo consistente
+- Docker: Containerización para configuración de ambiente consistente
 
-## Architecture Overview
+## Visión General de la Arquitectura
 
-This project is structured following the principles of modularity and separation of concerns. The backend is organized
-into several key modules:
+Este proyecto está estructurado siguiendo los principios de modularidad y separación de responsabilidades. El backend está organizado
+en varios módulos clave:
 
-Core Modules:
+Módulos Principales:
 
-- Member Module: Handles all operations related to gym members
-- Membership Plans Module: Manages membership plans
-- Payment Module: Integrates with Stripe to manage payments
-- Check-In Module: Records and manages member check-ins
-- Stripe Module: Encapsulates Stripe API calls
-- Supabase Module: Provides a wrapper around Supabase
+- Módulo de Miembros: Maneja todas las operaciones relacionadas con los miembros del gimnasio
+- Módulo de Planes de Membresía: Gestiona los planes de membresía
+- Módulo de Pagos: Se integra con Stripe para gestionar pagos
+- Módulo de Registro de Entrada: Registra y gestiona los registros de entrada de miembros
+- Módulo de Stripe: Encapsula las llamadas a la API de Stripe
+- Módulo de Supabase: Proporciona un wrapper alrededor de Supabase
 
-This architecture promotes:
+Esta arquitectura promueve:
 
-- Scalability: The modular structure allows for easy expansion and maintenance
-- Testability: Separation of concerns ensures that each module can be tested independently
-- Maintainability: Clear organization of code enhances readability and makes it easier to update or refactor
+- Escalabilidad: La estructura modular permite fácil expansión y mantenimiento
+- Testabilidad: La separación de responsabilidades asegura que cada módulo pueda ser probado independientemente
+- Mantenibilidad: La organización clara del código mejora la legibilidad y facilita la actualización o refactorización
 
-## Getting Started
+## Comenzando
 
-### Prerequisites
+### Prerrequisitos
 
-- Node.js (v20 or later)
-- npm (v10 or later)
+- Node.js (v20 o posterior)
+- npm (v10 o posterior)
 
-### Installation
+### Instalación
 
-1. Clone the repository:
-
-   ```
-   git clone https://github.com/HanifCarroll/gym-management-server-express.git
-   ```
-
-2. Navigate to the project directory:
+1. Clona el repositorio:
 
    ```
-   cd gym-management-server-express
+   git clone https://github.com/cajimenez96/gym-management-server.git
    ```
 
-3. Install dependencies:
+2. Navega al directorio del proyecto:
+
+   ```
+   cd gym-management-server
+   ```
+
+3. Instala las dependencias:
    ```
    npm install
    ```
 
-### Environment Setup
+### Configuración del Entorno
 
-1. Copy the `.env.example` file to `.env`:
+1. Copia el archivo `.env.example` a `.env`:
 
    ```
    cp .env.example .env
    ```
 
-2. Edit `.env` and set the required environment variables:
+2. Edita `.env` y establece las variables de entorno requeridas:
    ```
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_KEY=your_supabase_key
-   STRIPE_SECRET_KEY=your_stripe_secret_key
+   SUPABASE_URL=tu_url_de_supabase
+   SUPABASE_KEY=tu_clave_de_supabase
+   STRIPE_SECRET_KEY=tu_clave_secreta_de_stripe
    ```
 
-Your stripe secret key can be retrieved from your Stripe dashboard.
+Tu clave secreta de Stripe puede ser obtenida desde tu panel de control de Stripe.
 
-Please make sure that test mode is enabled and that you grab the corresponding key. It should start with pk*test*.
+Por favor asegúrate de que el modo de prueba esté habilitado y que obtengas la clave correspondiente. Debe comenzar con pk*test*.
 
-## Running the Application
+## Ejecutando la Aplicación
 
-To run the application in development mode:
+Para ejecutar la aplicación en modo de desarrollo:
 
 ```
 npm run start:dev
 ```
 
-The server will start on `http://localhost:3001`, and the API will be accessible at this URL.
+El servidor se iniciará en `http://localhost:3001`, y la API será accesible en esta URL.
 
-## Testing
+## Pruebas
 
-This project uses Jest for unit and integration testing. Tests cover the core business logic, service layers, and API
-endpoints to ensure reliability and correctness.
+Este proyecto usa Jest para pruebas unitarias y de integración. Las pruebas cubren la lógica de negocio principal, las capas de servicio y los
+endpoints de la API para asegurar confiabilidad y corrección.
 
-To run tests:
+Para ejecutar las pruebas:
 
 ```
 npm test
 ```
 
-For watch mode:
+Para modo watch:
 
 ```
 npm run test:watch
 ```
 
-Test coverage reports are generated automatically and can be reviewed to ensure that the application is well-tested.
+Los reportes de cobertura de pruebas se generan automáticamente y pueden ser revisados para asegurar que la aplicación esté bien probada.
 
-## Database Schema
+## Esquema de Base de Datos
 
-The database schema is implemented in Supabase and follows a relational model. Key entities include:
+El esquema de la base de datos está implementado en Supabase y sigue un modelo relacional. Las entidades clave incluyen:
 
-- Members: Stores member information such as name, contact details, and status
-- MembershipPlans: Defines the available membership plans, including duration and pricing
-- Memberships: Links members to their membership plans, with start and end dates
-- Payments: Tracks payment transactions, including amounts and statuses
-- CheckIns: Records member check-ins, linked to a member
+- Members: Almacena información de miembros como nombre, detalles de contacto y estado
+- MembershipPlans: Define los planes de membresía disponibles, incluyendo duración y precios
+- Memberships: Vincula miembros con sus planes de membresía, con fechas de inicio y fin
+- Payments: Rastrea transacciones de pago, incluyendo montos y estados
+- CheckIns: Registra los registros de entrada de miembros, vinculados a un miembro
 
-## API Endpoints
+## Endpoints de la API
 
-The backend exposes a RESTful API for interacting with the system. Key endpoints include:
+El backend expone una API RESTful para interactuar con el sistema. Los endpoints clave incluyen:
 
-- Members:
+- Miembros:
     - GET /api/members
     - POST /api/members
     - PUT /api/members/:id
     - DELETE /api/members/:id
-- Membership Plans:
+- Planes de Membresía:
     - GET /api/membership-plans
     - POST /api/membership-plans
     - PATCH /api/membership-plans/:id
     - DELETE /api/membership-plans/:id
-- Payments:
+- Pagos:
     - POST /api/payments/initiate
     - POST /api/payments/confirm/:paymentIntentId
     - GET /api/payments/history
-- Check-Ins:
+- Registros de Entrada:
     - POST /api/check-in
     - GET /api/check-in/history
 
-These endpoints are documented using Swagger, which is automatically generated and can be accessed
-at `http://localhost:3001/api`.
+Estos endpoints están documentados usando Swagger, que se genera automáticamente y puede ser accedido
+en `http://localhost:3001/api`.
 
-## Code Quality and Formatting
+## Calidad y Formato del Código
 
-To ensure code quality and consistency, this project uses:
+Para asegurar la calidad y consistencia del código, este proyecto usa:
 
-- **Prettier**: For consistent code formatting
+- **Prettier**: Para formato de código consistente
 
-    - Configuration in `.prettierrc`
-    - Run formatter: `npm run format`
+    - Configuración en `.prettierrc`
+    - Ejecutar formateador: `npm run format`
 
-- **ESLint**: For static code analysis
+- **ESLint**: Para análisis estático de código
 
-    - Configuration in `.eslintrc.js`
-    - Run linter: `npm run lint`
+    - Configuración en `.eslintrc.js`
+    - Ejecutar linter: `npm run lint`
 
-- **lint-staged**: For running linters on git staged files
+- **lint-staged**: Para ejecutar linters en archivos git staged
 
-    - Configuration in `package.json`
+    - Configuración en `package.json`
 
-- **Husky**: For running git hooks
-    - Pre-commit hook to run lint-staged
+- **Husky**: Para ejecutar git hooks
+    - Hook pre-commit para ejecutar lint-staged
 
-These tools ensure that the codebase remains clean, readable, and maintainable.
+Estas herramientas aseguran que la base de código permanezca limpia, legible y mantenible.
 
-## License
+## Licencia
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
+Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICENSE.md](LICENSE) para más detalles.
 
-## Contact Information
-
-For any inquiries about this project, please contact:
-
-Hanif Carroll
-
-Email: [HanifCarroll@gmail.com](mailto:HanifCarroll@gmail.com)
-
-LinkedIn: https://www.linkedin.com/in/hanifcarroll
-
-GitHub: https://github.com/HanifCarroll
