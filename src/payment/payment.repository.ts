@@ -22,16 +22,22 @@ export class PaymentRepository {
 		memberId: string;
 		planId: string;
 		amount: number;
-		stripePaymentIntentId: string;
+		stripePaymentIntentId?: string;
 	}): Promise<CreatePaymentResponse> {
+		const insertData: any = {
+			member_id: memberId,
+			amount,
+			status: 'Pending',
+			plan_id: planId,
+		};
+
+		// Only add stripe_payment_intent_id if provided (for backward compatibility)
+		if (stripePaymentIntentId) {
+			insertData.stripe_payment_intent_id = stripePaymentIntentId;
+		}
+
 		const { data, error } = await this.db
-			.insert({
-				member_id: memberId,
-				amount,
-				status: 'Pending',
-				stripe_payment_intent_id: stripePaymentIntentId,
-				plan_id: planId,
-			})
+			.insert(insertData)
 			.select(this.selectFields)
 			.single();
 
@@ -42,7 +48,7 @@ export class PaymentRepository {
 		return {
 			paymentId: data.id,
 			clientSecret: null, // This will be set in the service
-			paymentIntentId: data.stripe_payment_intent_id,
+			paymentIntentId: data.stripe_payment_intent_id || null,
 		};
 	}
 
@@ -58,6 +64,23 @@ export class PaymentRepository {
 
 		if (!data) {
 			throw new Error(`Payment with intent ID ${paymentIntentId} not found`);
+		}
+
+		return transformSupabaseResultToCamelCase<Payment>(data);
+	}
+
+	async findPaymentById(paymentId: string): Promise<Payment> {
+		const { data, error } = await this.db
+			.select(`${this.selectFields}, member(*)`)
+			.eq('id', paymentId)
+			.single();
+
+		if (error) {
+			this.handleError(error, 'find payment by ID');
+		}
+
+		if (!data) {
+			throw new Error(`Payment with ID ${paymentId} not found`);
 		}
 
 		return transformSupabaseResultToCamelCase<Payment>(data);

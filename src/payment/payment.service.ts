@@ -4,7 +4,6 @@ import type {
 	Payment,
 	PaymentRepository,
 } from '@/payment';
-import type { StripeService } from '@/stripe';
 import { addMonths, isAfter } from 'date-fns';
 import type { MembershipPlanRepository } from 'src/membership-plan';
 
@@ -13,12 +12,10 @@ export class PaymentService {
 		private readonly memberRepository: MemberRepository,
 		private readonly paymentRepository: PaymentRepository,
 		private readonly membershipPlanRepository: MembershipPlanRepository,
-		private readonly stripeService: StripeService,
 	) {
 		this.memberRepository = memberRepository;
 		this.paymentRepository = paymentRepository;
 		this.membershipPlanRepository = membershipPlanRepository;
-		this.stripeService = stripeService;
 	}
 
 	async createPayment(
@@ -33,21 +30,16 @@ export class PaymentService {
 			throw new Error('Payment amount must be greater than zero');
 		}
 
-		const paymentIntent = await this.stripeService.createPaymentIntent(
-			amount,
-			'usd',
-		);
-
+		// Create manual payment record (no Stripe integration)
 		const paymentResponse = await this.paymentRepository.createPaymentRecord({
 			memberId,
 			planId,
 			amount,
-			stripePaymentIntentId: paymentIntent.id,
 		});
 
 		return {
 			...paymentResponse,
-			clientSecret: paymentIntent.client_secret,
+			message: 'Payment record created. Please process payment manually.',
 		};
 	}
 
@@ -55,6 +47,16 @@ export class PaymentService {
 		const payment =
 			await this.paymentRepository.findPaymentByIntentId(paymentIntentId);
 		console.log('payment', payment);
+		await this.paymentRepository.updatePaymentStatus(payment.id, 'Successful');
+		await this.updateMembership(payment.memberId, payment.planId);
+
+		return payment;
+	}
+
+	// New method for manual payment confirmation using payment ID
+	async confirmPaymentById(paymentId: string): Promise<Payment> {
+		const payment = await this.paymentRepository.findPaymentById(paymentId);
+		console.log('Manual payment confirmation', payment);
 		await this.paymentRepository.updatePaymentStatus(payment.id, 'Successful');
 		await this.updateMembership(payment.memberId, payment.planId);
 

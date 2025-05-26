@@ -5,6 +5,7 @@ import type {
 } from '@/check-in';
 import type { MemberRepository } from '@/member';
 import type { SupabaseService } from '@/supabase';
+import { authMiddleware } from '@/auth';
 import { Router } from 'express';
 
 interface CheckInRouterDependencies {
@@ -20,12 +21,14 @@ export const createCheckInsRouter = ({
 }: CheckInRouterDependencies): Router => {
 	const router = Router();
 
-	router.post<unknown, unknown, { memberId: string }>('/', async (req, res) => {
+	// CREATE CHECK-IN - Owner y Admin (funcionalidad principal de admin)
+	router.post('/', authMiddleware.authenticateToken, authMiddleware.requireAnyRole, async (req, res) => {
 		const result = await checkInsController.createCheckIn(req.body.memberId);
 		res.status(201).json(result);
 	});
 
-	router.get('/', async (req, res) => {
+	// GET CHECK-INS - Owner y Admin
+	router.get('/', authMiddleware.authenticateToken, authMiddleware.requireAnyRole, async (req, res) => {
 		const result = await checkInsController.getHistoricalCheckIns();
 		res.json(result);
 	});

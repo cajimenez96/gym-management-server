@@ -12,10 +12,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/body-parser": "^1.19.5",
     "@types/bun": "latest",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
     "eslint": "^9.9.0",
     "globals": "^15.9.0"
   },
@@ -25,10 +27,11 @@
   "dependencies": {
     "@biomejs/biome": "^1.9.2",
     "@supabase/supabase-js": "^2.45.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^2.0.0-beta.2",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "express": "^5.0.0-beta.3",
-    "stripe": "^16.8.0"
+    "jsonwebtoken": "^9.0.2"
   }
 }

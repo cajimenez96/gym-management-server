@@ -7,9 +7,11 @@ export enum PaymentStatus {
 export interface DbPayment {
 	id: string;
 	member_id: string;
+	plan_id: string;
 	amount: number;
 	date: string;
 	status: string;
+	stripe_payment_intent_id?: string;
 	created_at: string;
 	updated_at: string;
 }

@@ -3,14 +3,11 @@ export const config = {
 		url: process.env.SUPABASE_URL,
 		key: process.env.SUPABASE_KEY,
 	},
-	stripe: {
-		secretKey: process.env.STRIPE_SECRET_KEY,
-	},
-	port: process.env.PORT || 3002,
+	port: process.env.PORT || 4000,
 };
 
 // Validate required environment variables
-const requiredEnvVars = ['SUPABASE_URL', 'SUPABASE_KEY', 'STRIPE_SECRET_KEY'];
+const requiredEnvVars = ['SUPABASE_URL', 'SUPABASE_KEY'];
 for (const envVar of requiredEnvVars) {
 	if (!process.env[envVar]) {
 		throw new Error(`Missing required environment variable: ${envVar}`);

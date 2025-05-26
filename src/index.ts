@@ -1,4 +1,10 @@
 import {
+	AuthRepository,
+	AuthService,
+	AuthController,
+	createAuthRouter,
+} from '@/auth';
+import {
 	CheckInRepository,
 	CheckInService,
 	CheckInsController,
@@ -22,7 +28,6 @@ import {
 	PaymentsController,
 	createPaymentsRouter,
 } from '@/payment';
-import { StripeService } from '@/stripe';
 import { SupabaseService } from '@/supabase';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -36,13 +41,22 @@ const port = process.env.PORT || 4000;
 app.use(bodyParser.json()); // Parses incoming requests with JSON payloads
 app.use(bodyParser.urlencoded({ extended: true })); // Parses incoming requests with URL-encoded payloads
 app.use(
-	cors({
-		origin: 'https://hc-gym-management.netlify.app',
-	}),
+	cors(),
 );
 
 // Set up dependencies
 const supabaseService = new SupabaseService();
+
+// Auth
+const authRepository = new AuthRepository(supabaseService);
+const authService = new AuthService(authRepository);
+const authController = new AuthController(authService);
+const authRouter = createAuthRouter({
+	authController,
+	authRepository,
+	authService,
+	supabaseService,
+});
 
 // Member
 const memberRepository = new MemberRepository(supabaseService);
@@ -84,12 +98,10 @@ const membershipPlanRouter = createMembershipPlansRouter({
 
 // Payment
 const paymentRepository = new PaymentRepository(supabaseService);
-const stripeService = new StripeService();
 const paymentService = new PaymentService(
 	memberRepository,
 	paymentRepository,
 	membershipPlansRepository,
-	stripeService,
 );
 const paymentsController = new PaymentsController(paymentService);
 const paymentRouter = createPaymentsRouter({
@@ -98,12 +110,12 @@ const paymentRouter = createPaymentsRouter({
 	paymentRepository,
 	paymentService,
 	paymentsController,
-	stripeService,
 	supabaseService,
 });
 
 // Set up routes
 const apiRouter = express.Router();
+apiRouter.use('/auth', authRouter);
 apiRouter.use('/check-ins', checkInRouter);
 apiRouter.use('/members', memberRouter);
 apiRouter.use('/membership-plans', membershipPlanRouter);
@@ -123,6 +135,9 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 // Start the server
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
+app.listen(port, async () => {
+	console.log(`🚀 Server is running on port ${port}`);
+	
+	// Test database connection
+	await supabaseService.testConnection();
 });

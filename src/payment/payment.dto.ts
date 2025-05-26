@@ -9,7 +9,9 @@ export interface InitiatePaymentDto {
 export interface CreatePaymentResponse {
 	paymentId: string;
 
-	clientSecret: string;
+	clientSecret?: string | null; // Optional for backward compatibility
 
-	paymentIntentId: string;
+	paymentIntentId?: string | null; // Optional for backward compatibility
+
+	message?: string; // For manual payment messages
 }
