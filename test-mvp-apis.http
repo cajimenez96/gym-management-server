@@ -1,0 +1,140 @@
+### 🧪 MVP API Testing for Gym Management System
+### Backend: http://localhost:4000
+
+# Variables
+@baseUrl = http://localhost:4000
+@ownerToken = YOUR_OWNER_JWT_TOKEN_HERE
+@adminToken = YOUR_ADMIN_JWT_TOKEN_HERE
+
+### 🔐 1. Authentication - Login as Owner
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin_owner",
+  "password": "owner123"
+}
+
+### 🔐 2. Authentication - Login as Admin  
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin_checkin", 
+  "password": "admin123"
+}
+
+### 👥 3. Create New Member (Owner only) - MVP Schema
+POST {{baseUrl}}/members
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "nombre": "Juan Carlos",
+  "apellido": "Pérez García",
+  "dni": "12345678",
+  "email": "juan.perez@email.com",
+  "phone": "+54911234567",
+  "fechaIngreso": "2024-01-15T10:00:00Z",
+  "fechaRenovacion": "2024-02-15T10:00:00Z",
+  "estado": "activo",
+  "plan": "mensual",
+  "status": "Active"
+}
+
+### 👥 4. Create Another Member for Testing
+POST {{baseUrl}}/members
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "nombre": "María Elena",
+  "apellido": "González López",
+  "dni": "87654321",
+  "email": "maria.gonzalez@email.com",
+  "phone": "+54911234568",
+  "fechaIngreso": "2024-01-10T10:00:00Z",
+  "fechaRenovacion": "2023-12-10T10:00:00Z",
+  "estado": "vencido",
+  "plan": "personalizado",
+  "status": "Active"
+}
+
+### 📋 5. Get All Members (Owner + Admin)
+GET {{baseUrl}}/members
+Authorization: Bearer {{ownerToken}}
+
+### 🔍 6. Search Member by DNI (Owner + Admin)
+GET {{baseUrl}}/members/dni/12345678
+Authorization: Bearer {{ownerToken}}
+
+### 🔍 7. Search Member by DNI as Admin
+GET {{baseUrl}}/members/dni/12345678
+Authorization: Bearer {{adminToken}}
+
+### 🔍 8. Search Non-existent DNI (Should return 404)
+GET {{baseUrl}}/members/dni/99999999
+Authorization: Bearer {{ownerToken}}
+
+### ✅ 9. Get Active Members Only (Owner + Admin)
+GET {{baseUrl}}/members/active
+Authorization: Bearer {{ownerToken}}
+
+### ❌ 10. Get Expired Members Only (Owner only)
+GET {{baseUrl}}/members/expired
+Authorization: Bearer {{ownerToken}}
+
+### ❌ 11. Try Get Expired Members as Admin (Should be forbidden)
+GET {{baseUrl}}/members/expired
+Authorization: Bearer {{adminToken}}
+
+### 🔄 12. Renew Membership by DNI (Owner only)
+PATCH {{baseUrl}}/members/87654321/renew
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "fechaRenovacion": "2024-03-15T10:00:00Z",
+  "plan": "mensual"
+}
+
+### 🔄 13. Try Renew Membership as Admin (Should be forbidden)
+PATCH {{baseUrl}}/members/12345678/renew
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "fechaRenovacion": "2024-04-15T10:00:00Z"
+}
+
+### 🔧 14. Update All Member Statuses (Owner only)
+POST {{baseUrl}}/members/update-statuses
+Authorization: Bearer {{ownerToken}}
+
+### 🔧 15. Try Update Statuses as Admin (Should be forbidden)
+POST {{baseUrl}}/members/update-statuses
+Authorization: Bearer {{adminToken}}
+
+### 📝 16. Update Member by ID (Owner only)
+PATCH {{baseUrl}}/members/MEMBER_ID_HERE
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "phone": "+54911234999",
+  "plan": "personalizado"
+}
+
+### 🗑️ 17. Delete Member (Owner only)
+DELETE {{baseUrl}}/members/MEMBER_ID_HERE
+Authorization: Bearer {{ownerToken}}
+
+### 📊 Expected Results Summary:
+# ✅ Owner should have access to ALL endpoints
+# ✅ Admin should have access to: GET members, GET active, GET by DNI
+# ❌ Admin should be FORBIDDEN from: expired members, renewal, update statuses, delete
+# ✅ DNI search should work for existing members
+# ❌ DNI search should return 404 for non-existent DNI
+# ✅ Member creation should work with new MVP schema
+# ✅ Status filtering should work (active vs expired)
+# ✅ Membership renewal should update fechaRenovacion and estado 

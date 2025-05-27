@@ -3,6 +3,8 @@ import type {
 	Member,
 	MemberService,
 	UpdateMemberDto,
+	SearchMemberByDniDto,
+	RenewMembershipDto,
 } from '@/member';
 
 export class MembersController {
@@ -16,11 +18,35 @@ export class MembersController {
 		return this.memberService.findAll();
 	}
 
+	findById(id: string): Promise<Member> {
+		return this.memberService.findById(id);
+	}
+
+	findByDni(dni: string): Promise<Member | null> {
+		return this.memberService.findByDni(dni);
+	}
+
 	update(id: string, updateMemberDto: UpdateMemberDto): Promise<Member> {
 		return this.memberService.update(id, updateMemberDto);
 	}
 
+	renewMembership(renewDto: RenewMembershipDto): Promise<Member> {
+		return this.memberService.renewMembership(renewDto);
+	}
+
 	remove(id: string): Promise<Member> {
 		return this.memberService.remove(id);
+	}
+
+	getActiveMembers(): Promise<Member[]> {
+		return this.memberService.getActiveMembers();
+	}
+
+	getExpiredMembers(): Promise<Member[]> {
+		return this.memberService.getExpiredMembers();
+	}
+
+	updateMemberStatuses(): Promise<void> {
+		return this.memberService.updateMemberStatuses();
 	}
 }
