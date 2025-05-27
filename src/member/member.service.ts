@@ -5,11 +5,16 @@ import type {
 	UpdateMemberDto,
 	SearchMemberByDniDto,
 	RenewMembershipDto,
+	MemberCheckInInfoDto,
 } from '@/member';
 import { MembershipStatus } from '@/member';
+import type { MembershipPlanRepository, MembershipPlan } from '@/membership-plan';
 
 export class MemberService {
-	constructor(private readonly memberRepository: MemberRepository) {}
+	constructor(
+		private readonly memberRepository: MemberRepository,
+		private readonly membershipPlanRepository: MembershipPlanRepository,
+	) {}
 
 	async create(createMemberDto: CreateMemberDto): Promise<Member> {
 		// Validate DNI uniqueness
@@ -54,19 +59,6 @@ export class MemberService {
 		// Check if member exists
 		await this.findById(id);
 
-		// If email is being updated, check for uniqueness
-		if (updateMemberDto.email) {
-			const existingMember = await this.memberRepository.findByEmail(
-				updateMemberDto.email,
-			);
-
-			if (existingMember && existingMember.id !== id) {
-				throw new Error(
-					`Member with email ${updateMemberDto.email} already exists`,
-				);
-			}
-		}
-
 		return this.memberRepository.update(id, updateMemberDto);
 	}
 
@@ -99,7 +91,7 @@ export class MemberService {
 		return this.memberRepository.renewMembership(
 			renewDto.dni,
 			newRenewalDate,
-			renewDto.membershipPlan,
+			renewDto.membershipPlanId,
 		);
 	}
 
@@ -116,5 +108,50 @@ export class MemberService {
 	async getExpiredMembers(): Promise<Member[]> {
 		const allMembers = await this.memberRepository.findAll();
 		return allMembers.filter(member => member.membershipStatus === MembershipStatus.Expired);
+	}
+
+	async getMemberDetailsForCheckInByDni(dni: string): Promise<MemberCheckInInfoDto> {
+		const member = await this.memberRepository.findByDni(dni);
+		if (!member) {
+			// Consider using a custom error type or status code for client handling
+			const error = new Error(`Miembro con DNI ${dni} no encontrado.`);
+			(error as any).status = 404; 
+			throw error;
+		}
+
+		let planName: string | null = null;
+		if (member.membershipPlanId) {
+			try {
+				const plan = await this.membershipPlanRepository.findOne(member.membershipPlanId);
+				planName = plan.name;
+			} catch (error) {
+				console.warn(`Plan con ID ${member.membershipPlanId} no encontrado para miembro ${member.id}. Error: ${(error as Error).message}`);
+				// Decidir si se debe mostrar un error específico del plan o simplemente "N/A" o similar
+				planName = 'Plan no asignado o no encontrado'; 
+			}
+		}
+
+		const membershipStatusText = member.membershipStatus === MembershipStatus.Active 
+			? 'Habilitado' 
+			: 'No Habilitado';
+
+		// Usar toLocaleDateString para un formato más amigable.
+		// Asegúrate de que las fechas sean válidas antes de intentar formatearlas.
+		const startDateFormatted = member.startDate 
+			? new Date(member.startDate).toLocaleDateString('es-AR', { year: 'numeric', month: '2-digit', day: '2-digit' })
+			: 'N/A'; 
+		const renewalDateFormatted = member.renewalDate 
+			? new Date(member.renewalDate).toLocaleDateString('es-AR', { year: 'numeric', month: '2-digit', day: '2-digit' })
+			: 'N/A';
+
+		return {
+			id: member.id,
+			firstName: member.firstName,
+			lastName: member.lastName,
+			startDate: startDateFormatted,
+			renewalDate: renewalDateFormatted,
+			planName: planName,
+			membershipStatusText: membershipStatusText,
+		};
 	}
 }

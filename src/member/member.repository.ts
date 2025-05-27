@@ -10,7 +10,7 @@ import { camelToSnakeCase, transformSupabaseResultToCamelCase } from '@/utils';
 export class MemberRepository {
 	private readonly tableName = 'member';
 	private readonly selectFields =
-		'id, first_name, last_name, dni, email, phone, start_date, renewal_date, membership_status, membership_plan, status, created_at, updated_at';
+		'id, first_name, last_name, dni, email, phone, start_date, renewal_date, membership_status, membership_plan_id, status, created_at, updated_at';
 
 	constructor(private readonly supabaseService: SupabaseService) {}
 
@@ -125,14 +125,14 @@ export class MemberRepository {
 		return data ? transformSupabaseResultToCamelCase<Member>(data) : null;
 	}
 
-	async renewMembership(dni: string, fechaRenovacion: string, plan?: string): Promise<Member> {
+	async renewMembership(dni: string, fechaRenovacion: string, membershipPlanId?: string | null): Promise<Member> {
 		const updateData: any = {
 			renewal_date: fechaRenovacion,
 			membership_status: 'active', // Reset status when renewing
 		};
 
-		if (plan) {
-			updateData.membership_plan = plan;
+		if (membershipPlanId !== undefined) {
+			updateData.membership_plan_id = membershipPlanId;
 		}
 
 		const { data, error } = await (this.supabase as any)

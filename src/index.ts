@@ -60,7 +60,8 @@ const authRouter = createAuthRouter({
 
 // Member
 const memberRepository = new MemberRepository(supabaseService);
-const memberService = new MemberService(memberRepository);
+const membershipPlansRepository = new MembershipPlanRepository(supabaseService);
+const memberService = new MemberService(memberRepository, membershipPlansRepository);
 const membersController = new MembersController(memberService);
 const memberRouter = createMembersRouter({
 	membersController,
@@ -82,7 +83,6 @@ const checkInRouter = createCheckInsRouter({
 });
 
 // Membership Plan
-const membershipPlansRepository = new MembershipPlanRepository(supabaseService);
 const membershipPlansService = new MembershipPlanService(
 	membershipPlansRepository,
 );
@@ -124,13 +124,26 @@ app.use('/api', apiRouter);
 
 // Error handling middleware
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-	console.log('Error caught in global error handler');
-	console.error(err.stack);
-	res.status(500).json({
+app.use((err: Error & { status?: number }, _req: Request, res: Response, _next: NextFunction) => {
+	console.log('Error caught in global error handler:');
+	console.error('Original Error Message:', err.message);
+	console.error('Original Error Status:', err.status);
+	// console.error(err.stack); // Puede ser muy verboso, opcional para producción
+
+	const statusCode = err.status || 500;
+	// Si el statusCode es un error del cliente (4xx), usa su mensaje.
+	// Sino, para 5xx no esperados, un mensaje genérico es más seguro.
+	const responseMessage = (statusCode >= 400 && statusCode < 500) ? err.message : 'Ocurrió un error inesperado en el servidor.';
+
+	res.status(statusCode).json({
 		status: 'error',
-		message: 'Internal Server Error',
-		...(process.env.NODE_ENV === 'development' && { error: err.message }),
+		message: responseMessage,
+		// Proporcionar más detalles solo en modo de desarrollo por seguridad
+		...(process.env.NODE_ENV === 'development' && { 
+            errorDetails: err.message, // Mantenemos el mensaje original del error para depuración en dev
+            isCustomStatus: !!err.status, 
+            // stack: err.stack // Descomentar si se necesita el stack trace completo en dev
+        }),
 	});
 });
 

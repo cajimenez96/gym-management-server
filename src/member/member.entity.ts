@@ -9,11 +9,6 @@ export enum MembershipStatus {
 	Expired = 'expired',
 }
 
-export enum MembershipPlan {
-	Monthly = 'monthly',
-	Custom = 'custom',
-}
-
 export interface DbMember {
 	id: string;
 	first_name: string;
@@ -24,7 +19,7 @@ export interface DbMember {
 	start_date: string;
 	renewal_date: string;
 	membership_status: MembershipStatus;
-	membership_plan: MembershipPlan;
+	membership_plan_id: string | null;
 	status: MemberStatus;
 	created_at: string;
 	updated_at: string;
@@ -49,7 +44,7 @@ export interface Member {
 
 	membershipStatus: MembershipStatus;
 
-	membershipPlan: MembershipPlan;
+	membershipPlanId?: string | null;
 
 	status: MemberStatus;
 

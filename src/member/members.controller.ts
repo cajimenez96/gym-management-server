@@ -5,6 +5,7 @@ import type {
 	UpdateMemberDto,
 	SearchMemberByDniDto,
 	RenewMembershipDto,
+	MemberCheckInInfoDto,
 } from '@/member';
 
 export class MembersController {
@@ -48,5 +49,9 @@ export class MembersController {
 
 	updateMemberStatuses(): Promise<void> {
 		return this.memberService.updateMemberStatuses();
+	}
+
+	async getCheckInInfoByDni(dni: string): Promise<MemberCheckInInfoDto> {
+		return this.memberService.getMemberDetailsForCheckInByDni(dni);
 	}
 }

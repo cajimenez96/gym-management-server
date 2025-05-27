@@ -22,10 +22,6 @@ export class MembershipPlanService {
 			);
 		}
 
-		if (createMembershipPlanDto.duration <= 0) {
-			throw new Error('Membership plan duration must be greater than zero');
-		}
-
 		if (createMembershipPlanDto.price <= 0) {
 			throw new Error('Membership plan price must be greater than zero');
 		}
@@ -59,13 +55,6 @@ export class MembershipPlanService {
 					`Membership plan with name "${updateMembershipPlanDto.name}" already exists`,
 				);
 			}
-		}
-
-		if (
-			updateMembershipPlanDto.duration !== undefined &&
-			updateMembershipPlanDto.duration <= 0
-		) {
-			throw new Error('Membership plan duration must be greater than zero');
 		}
 
 		if (

@@ -1,6 +1,8 @@
+import { MembershipDuration } from './membership-plan.entity';
+
 export interface CreateMembershipPlanDto {
 	name: string;
-	duration: number;
+	duration: MembershipDuration;
 	price: number;
 }
 
