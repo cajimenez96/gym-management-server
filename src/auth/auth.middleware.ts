@@ -31,7 +31,7 @@ export class AuthMiddleware {
 			const decoded = jwt.verify(token, this.JWT_SECRET) as AuthTokenPayload;
 			req.user = decoded;
 			next();
-		} catch (error) {
+		} catch (error: any) {
 			res.status(403).json({
 				error: 'Forbidden',
 				message: 'Invalid or expired token',

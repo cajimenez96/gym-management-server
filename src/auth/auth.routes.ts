@@ -7,6 +7,7 @@ import type {
 } from '@/auth';
 import type { SupabaseService } from '@/supabase';
 import { Router } from 'express';
+import { authMiddleware } from './auth.middleware';
 
 interface AuthRouterDependencies {
 	supabaseService: SupabaseService;
@@ -53,33 +54,36 @@ export const createAuthRouter = ({
 	});
 
 	// GET /auth/me - Obtener información del usuario actual
-	router.get('/me', async (req, res) => {
-		try {
-			// El middleware de autenticación debería agregar el userId al request
-			const userId = (req as any).user?.userId;
-			if (!userId) {
-				return res.status(401).json({
-					error: 'Unauthorized',
-					message: 'No valid token provided',
+	router.get(
+		'/me', 
+		authMiddleware.authenticateToken,
+		async (req, res) => {
+			try {
+				const userId = req.user?.userId;
+				if (!userId) {
+					return res.status(401).json({
+						error: 'Unauthorized',
+						message: 'User ID not found in token payload after authentication',
+					});
+				}
+
+				const result = await authController.getCurrentUser(userId);
+				if (!result) {
+					return res.status(404).json({
+						error: 'User not found',
+						message: 'User no longer exists',
+					});
+				}
+
+				res.json(result);
+			} catch (error) {
+				res.status(500).json({
+					error: 'Internal server error',
+					message: error instanceof Error ? error.message : 'Unknown error',
 				});
 			}
-
-			const result = await authController.getCurrentUser(userId);
-			if (!result) {
-				return res.status(404).json({
-					error: 'User not found',
-					message: 'User no longer exists',
-				});
-			}
-
-			res.json(result);
-		} catch (error) {
-			res.status(500).json({
-				error: 'Internal server error',
-				message: error instanceof Error ? error.message : 'Unknown error',
-			});
 		}
-	});
+	);
 
 	return router;
 }; 
